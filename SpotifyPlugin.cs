@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace Wox.Plugin.Spotify
 {
-    public class SpotifyPlugin : IPlugin
+    public class SpotifyPlugin : IPlugin, ISettingProvider
     {
         private PluginInitContext _context;
-
+        
         private SpotifyApi _api;
 
         private readonly Dictionary<string, Func<string, List<Result>>> _terms = new Dictionary<string, Func<string, List<Result>>>();
@@ -16,6 +17,11 @@ namespace Wox.Plugin.Spotify
         private const string SpotifyIcon = "icon.png";
 
         private string currentUserId; //Required for playlist querying
+
+        public Control CreateSettingPanel()
+        {
+            return new SpotifyPluginSettings();
+        }
 
         public void Init(PluginInitContext context)
         {
