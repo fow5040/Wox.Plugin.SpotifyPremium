@@ -83,14 +83,17 @@ namespace Wox.Plugin.SpotifyPremium
             lastQueryTime = DateTime.UtcNow;
             DateTime thisQueryStartTime = DateTime.UtcNow;
 
-            if (!_client.ApiConnected)
+            //Try automatically refreshing token 
+            if (!_client.ApiConnected || !_client.TokenValid)
             {
-                return SingleResult("Spotify client unreachable", "Select to re-authorize", reconnectAction(_client));
-            }
-
-            if (!_client.TokenValid)
-            {
-                return SingleResult("Spotify client Token Expired", "Select to re-authorize", reconnectAction(_client));
+                reconnectAction(_client)();
+                try{
+                    currentUserId = _client.UserID;
+                }
+                catch{
+                    Console.WriteLine("Failed to write client ID");
+                    return SingleResult("Spotify client unreachable", "Select to re-authorize", reconnectAction(_client, false));
+                }
             }
 
             try

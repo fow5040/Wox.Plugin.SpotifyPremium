@@ -220,7 +220,7 @@ namespace Wox.Plugin.SpotifyPremium
                     _spotifyClient = new SpotifyClient(refreshResponse.AccessToken);
                 }
             }
-            else
+            else if (!keepRefreshToken)
             {
                 await _server.Start();
 
